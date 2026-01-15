@@ -1,0 +1,7 @@
+*.md
+README.md
+TEST_*.md
+*.ex
+start.sh
+.git
+.gitignore

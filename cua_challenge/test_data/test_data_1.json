@@ -1,0 +1,67 @@
+{
+  "test_id": "scenario_001",
+  "description": "Web developer profile with international format variations",
+  "page1": {
+    "first_name": "Sarah",
+    "last_name": "Mitchell",
+    "email": "sarah.mitchell@techcorp.com",
+    "date_of_birth": "1992-03-15T00:00:00Z",
+    "country": "United States",
+    "phone_number": "(415) 555-0123"
+  },
+  "page2": {
+    "street_address": "742 Market Street, Apt 5B",
+    "city": "San Francisco",
+    "zip_code": "94103",
+    "employment_status": "Full-time Employed",
+    "skills": [
+      "JavaScript",
+      "Python",
+      "TypeScript"
+    ],
+    "years_of_experience": "3-5 years",
+    "preferred_contact_method": "email"
+  },
+  "page3": {
+    "company": {
+      "hint": "Search for the company that starts with 'Google'"
+    },
+    "emergency_contact": {
+      "name": "Michael Mitchell",
+      "phone": "415.555.9876",
+      "relationship": "Sibling"
+    },
+    "product": {
+      "search_hint": "Find the laptop in Electronics",
+      "category": "Electronics",
+      "type": "laptop"
+    }
+  },
+  "page4": {
+    "project_type": "Web Development",
+    "framework": {
+      "hint": "Select the most popular React-based framework"
+    },
+    "features": [
+      "User Authentication",
+      "Database Integration",
+      "REST API",
+      "Real-time Updates"
+    ],
+    "budget": 75000,
+    "team": {
+      "size": "6-10 members",
+      "project_manager": "Jennifer Chen"
+    },
+    "vendor": {
+      "search_hint": "Look for vendor in San Francisco with 4.8 rating",
+      "location": "San Francisco",
+      "min_rating": 4.8
+    },
+    "timeline": {
+      "start_date": "2024-02-01T09:00:00-08:00",
+      "end_date": "2024-08-31T17:00:00-08:00"
+    },
+    "agreement": true
+  }
+}

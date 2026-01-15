@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CUA Challenge - Page 3</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">CUA Challenge</h1>
+      <p class="text-gray-600">Test your Computer Use Agent's capabilities</p>
+      <div class="mt-4 flex items-center">
+        <div class="flex-1 bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-600 h-2 rounded-full" style="width: 75%"></div>
+        </div>
+        <span class="ml-4 text-sm font-semibold text-gray-700">Page 3 of 4</span>
+      </div>
+    </div>
+
+    <!-- Main Form -->
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Page 3: Advanced Selection</h2>
+        <p class="text-gray-600">Difficulty: <span class="text-orange-600 font-semibold">Hard</span></p>
+      </div>
+
+      <!-- Error Message -->
+      <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      </div>
+
+      <form id="page3Form" class="space-y-6">
+        <!-- Searchable Dropdown -->
+        <div>
+          <label for="companySearch" class="block text-sm font-medium text-gray-700 mb-2">
+            Select Company * <span class="text-gray-500 text-xs">(Type to search)</span>
+          </label>
+          <div class="relative">
+            <input
+              type="text"
+              id="companySearch"
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Start typing company name..."
+              autocomplete="off"
+            >
+            <input type="hidden" id="companyValue" name="company" required>
+            <ul id="companyList" class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="google">Google Inc.</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="microsoft">Microsoft Corporation</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="apple">Apple Inc.</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="amazon">Amazon.com Inc.</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="meta">Meta Platforms Inc.</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="tesla">Tesla Inc.</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="netflix">Netflix Inc.</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="ibm">IBM Corporation</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="oracle">Oracle Corporation</li>
+              <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer" data-value="salesforce">Salesforce Inc.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Collapsible Section with Hidden Inputs -->
+        <div class="border border-gray-300 rounded-md">
+          <button
+            type="button"
+            id="emergencyToggle"
+            class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 flex justify-between items-center text-left font-medium text-gray-700"
+          >
+            <span>Emergency Contact Information *</span>
+            <svg class="arrow w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div id="emergencyContent" class="hidden px-4 py-4 space-y-4">
+            <div>
+              <label for="emergencyName" class="block text-sm font-medium text-gray-700 mb-2">
+                Contact Name *
+              </label>
+              <input
+                type="text"
+                id="emergencyName"
+                name="emergencyName"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="John Doe"
+              >
+            </div>
+            <div>
+              <label for="emergencyPhone" class="block text-sm font-medium text-gray-700 mb-2">
+                Contact Phone * <span class="text-gray-500 text-xs">(Format: 123-456-7890)</span>
+              </label>
+              <input
+                type="tel"
+                id="emergencyPhone"
+                name="emergencyPhone"
+                required
+                pattern="\d{3}-\d{3}-\d{4}"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="123-456-7890"
+              >
+            </div>
+            <div>
+              <label for="relationship" class="block text-sm font-medium text-gray-700 mb-2">
+                Relationship *
+              </label>
+              <select
+                id="relationship"
+                name="relationship"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select relationship</option>
+                <option value="spouse">Spouse</option>
+                <option value="parent">Parent</option>
+                <option value="sibling">Sibling</option>
+                <option value="friend">Friend</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Selection Table -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Select Product * <span class="text-gray-500 text-xs">(Search and click to select)</span>
+          </label>
+          <input
+            type="text"
+            id="productSearch"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+            placeholder="Search products..."
+          >
+          <input type="hidden" id="productValue" name="product" required>
+          <div class="border border-gray-300 rounded-md overflow-hidden">
+            <table id="productTable" class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Product Name</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Category</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">Price</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr class="hover:bg-blue-50 cursor-pointer product-row hidden" data-product="laptop-pro">
+                  <td class="px-4 py-3">Professional Laptop</td>
+                  <td class="px-4 py-3">Electronics</td>
+                  <td class="px-4 py-3">$1,299</td>
+                </tr>
+                <tr class="hover:bg-blue-50 cursor-pointer product-row hidden" data-product="wireless-mouse">
+                  <td class="px-4 py-3">Wireless Mouse</td>
+                  <td class="px-4 py-3">Accessories</td>
+                  <td class="px-4 py-3">$29</td>
+                </tr>
+                <tr class="hover:bg-blue-50 cursor-pointer product-row hidden" data-product="mechanical-keyboard">
+                  <td class="px-4 py-3">Mechanical Keyboard</td>
+                  <td class="px-4 py-3">Accessories</td>
+                  <td class="px-4 py-3">$149</td>
+                </tr>
+                <tr class="hover:bg-blue-50 cursor-pointer product-row hidden" data-product="monitor-4k">
+                  <td class="px-4 py-3">4K Monitor</td>
+                  <td class="px-4 py-3">Electronics</td>
+                  <td class="px-4 py-3">$599</td>
+                </tr>
+                <tr class="hover:bg-blue-50 cursor-pointer product-row hidden" data-product="usb-hub">
+                  <td class="px-4 py-3">USB-C Hub</td>
+                  <td class="px-4 py-3">Accessories</td>
+                  <td class="px-4 py-3">$79</td>
+                </tr>
+                <tr class="hover:bg-blue-50 cursor-pointer product-row hidden" data-product="webcam-hd">
+                  <td class="px-4 py-3">HD Webcam</td>
+                  <td class="px-4 py-3">Electronics</td>
+                  <td class="px-4 py-3">$89</td>
+                </tr>
+                <tr class="hover:bg-blue-50 cursor-pointer product-row hidden" data-product="desk-lamp">
+                  <td class="px-4 py-3">LED Desk Lamp</td>
+                  <td class="px-4 py-3">Office</td>
+                  <td class="px-4 py-3">$45</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="productNoResults" class="text-center py-8 text-gray-500">
+            Enter a search term to see products
+          </div>
+          <div id="productPagination" class="hidden mt-3 flex items-center justify-between">
+            <button
+              type="button"
+              id="productPrevBtn"
+              class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+            >
+              ← Previous
+            </button>
+            <span id="productPageInfo" class="text-sm text-gray-600"></span>
+            <button
+              type="button"
+              id="productNextBtn"
+              class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next →
+            </button>
+          </div>
+          <p id="selectedProduct" class="mt-2 text-sm text-gray-600"></p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between pt-4">
+          <button
+            type="button"
+            onclick="window.location.href='page2.html'"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+          >
+            ← Back
+          </button>
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+          >
+            Next Page →
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Instructions -->
+    <div class="mt-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
+      <h3 class="font-semibold text-orange-900 mb-2">Instructions for Agents:</h3>
+      <ul class="text-sm text-orange-800 space-y-1">
+        <li>• Type to search and select a company from the dropdown</li>
+        <li>• Expand the emergency contact section to reveal hidden fields</li>
+        <li>• Fill all emergency contact fields with proper format</li>
+        <li>• Search for a product and click a row in the table to select it</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Random Popup Modal -->
+  <div id="randomModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-md mx-4">
+      <div class="flex items-center mb-4">
+        <svg class="w-6 h-6 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+        <h3 class="text-xl font-bold text-gray-800">Security Notice</h3>
+      </div>
+      <p class="text-gray-600 mb-6">
+        Please verify that all contact information is up to date and accurate. This helps ensure we can reach you in case of emergencies.
+      </p>
+      <button
+        onclick="closeModal('randomModal')"
+        class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold px-6 py-3 rounded-md transition-colors duration-200"
+      >
+        Acknowledge
+      </button>
+    </div>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    // Initialize searchable company dropdown
+    initSearchableDropdown('companySearch', 'companyList', 'companyValue');
+
+    // Initialize collapsible section
+    const emergencyToggle = document.getElementById('emergencyToggle');
+    const emergencyContent = document.getElementById('emergencyContent');
+    emergencyToggle.addEventListener('click', () => {
+      emergencyContent.classList.toggle('hidden');
+      emergencyToggle.querySelector('.arrow').classList.toggle('rotate-180');
+    });
+
+    // Product table pagination setup
+    let productCurrentPage = 1;
+    const productItemsPerPage = 5;
+    let productFilteredRows = [];
+
+    function updateProductTable() {
+      const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+      const allRows = Array.from(document.querySelectorAll('.product-row'));
+      const noResults = document.getElementById('productNoResults');
+      const pagination = document.getElementById('productPagination');
+
+      // Filter rows based on search across all columns
+      productFilteredRows = allRows.filter(row => {
+        const cells = Array.from(row.cells);
+        const rowText = cells.map(cell => cell.textContent.toLowerCase()).join(' ');
+        return rowText.includes(searchTerm);
+      });
+
+      // Hide all rows first
+      allRows.forEach(row => row.classList.add('hidden'));
+
+      if (searchTerm === '') {
+        // No search term - show message
+        noResults.textContent = 'Enter a search term to see products';
+        noResults.classList.remove('hidden');
+        pagination.classList.add('hidden');
+        return;
+      }
+
+      if (productFilteredRows.length === 0) {
+        // No results found
+        noResults.textContent = 'No products found matching your search';
+        noResults.classList.remove('hidden');
+        pagination.classList.add('hidden');
+        return;
+      }
+
+      // Hide no results message
+      noResults.classList.add('hidden');
+
+      // Calculate pagination
+      const totalPages = Math.ceil(productFilteredRows.length / productItemsPerPage);
+      const startIndex = (productCurrentPage - 1) * productItemsPerPage;
+      const endIndex = startIndex + productItemsPerPage;
+
+      // Show current page rows
+      productFilteredRows.slice(startIndex, endIndex).forEach(row => {
+        row.classList.remove('hidden');
+      });
+
+      // Update pagination controls
+      if (totalPages > 1) {
+        pagination.classList.remove('hidden');
+        document.getElementById('productPageInfo').textContent =
+          `Page ${productCurrentPage} of ${totalPages} (${productFilteredRows.length} results)`;
+
+        document.getElementById('productPrevBtn').disabled = productCurrentPage === 1;
+        document.getElementById('productNextBtn').disabled = productCurrentPage === totalPages;
+      } else {
+        pagination.classList.add('hidden');
+      }
+    }
+
+    // Product search event
+    document.getElementById('productSearch').addEventListener('input', () => {
+      productCurrentPage = 1; // Reset to first page on new search
+      updateProductTable();
+    });
+
+    // Pagination buttons
+    document.getElementById('productPrevBtn').addEventListener('click', () => {
+      if (productCurrentPage > 1) {
+        productCurrentPage--;
+        updateProductTable();
+      }
+    });
+
+    document.getElementById('productNextBtn').addEventListener('click', () => {
+      const totalPages = Math.ceil(productFilteredRows.length / productItemsPerPage);
+      if (productCurrentPage < totalPages) {
+        productCurrentPage++;
+        updateProductTable();
+      }
+    });
+
+    // Product selection
+    document.querySelectorAll('.product-row').forEach(row => {
+      row.addEventListener('click', () => {
+        // Remove selection from all rows
+        document.querySelectorAll('.product-row').forEach(r => r.classList.remove('bg-blue-100'));
+        // Add selection to clicked row
+        row.classList.add('bg-blue-100');
+        // Store value
+        const productId = row.dataset.product;
+        const productName = row.cells[0].textContent;
+        document.getElementById('productValue').value = productId;
+        document.getElementById('selectedProduct').textContent = `Selected: ${productName}`;
+      });
+    });
+
+    // Form submission
+    document.getElementById('page3Form').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Validate company selection
+      const company = document.getElementById('companyValue').value;
+      if (!company) {
+        showError('Please select a company from the dropdown');
+        return;
+      }
+
+      // Validate emergency contact fields
+      const emergencyName = document.getElementById('emergencyName').value.trim();
+      const emergencyPhone = document.getElementById('emergencyPhone').value.trim();
+      const relationship = document.getElementById('relationship').value;
+
+      if (!emergencyName || !emergencyPhone || !relationship) {
+        showError('Please fill in all emergency contact fields');
+        return;
+      }
+
+      if (!validatePhone(emergencyPhone)) {
+        showError('Emergency phone must be in XXX-XXX-XXXX format');
+        return;
+      }
+
+      // Validate product selection
+      const product = document.getElementById('productValue').value;
+      if (!product) {
+        showError('Please select a product from the table');
+        return;
+      }
+
+      // Store data in sessionStorage
+      sessionStorage.setItem('page3Data', JSON.stringify({
+        company, emergencyName, emergencyPhone, relationship, product
+      }));
+
+      // Navigate to next page
+      window.location.href = 'page4.html';
+    });
+  </script>
+</body>
+</html>

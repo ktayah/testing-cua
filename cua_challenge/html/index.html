@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CUA Challenge - Page 1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">CUA Challenge</h1>
+      <p class="text-gray-600">Test your Computer Use Agent's capabilities</p>
+      <div class="mt-4 flex items-center">
+        <div class="flex-1 bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-600 h-2 rounded-full" style="width: 25%"></div>
+        </div>
+        <span class="ml-4 text-sm font-semibold text-gray-700">Page 1 of 4</span>
+      </div>
+    </div>
+
+    <!-- Main Form -->
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Page 1: Basic Information</h2>
+        <p class="text-gray-600">Difficulty: <span class="text-green-600 font-semibold">Easy</span></p>
+      </div>
+
+      <!-- Error Message -->
+      <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      </div>
+
+      <form id="page1Form" class="space-y-6">
+        <!-- First Name -->
+        <div>
+          <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+            First Name *
+          </label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter your first name"
+          >
+        </div>
+
+        <!-- Last Name -->
+        <div>
+          <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
+            Last Name *
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter your last name"
+          >
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            Email Address *
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="example@email.com"
+          >
+        </div>
+
+        <!-- Date of Birth -->
+        <div>
+          <label for="dob" class="block text-sm font-medium text-gray-700 mb-2">
+            Date of Birth * <span class="text-gray-500 text-xs">(Format: YYYY-MM-DD)</span>
+          </label>
+          <input
+            type="text"
+            id="dob"
+            name="dob"
+            required
+            pattern="\d{4}-\d{2}-\d{2}"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="1990-01-15"
+          >
+        </div>
+
+        <!-- Country Dropdown -->
+        <div>
+          <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
+            Country *
+          </label>
+          <select
+            id="country"
+            name="country"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">Select a country</option>
+            <option value="us">United States</option>
+            <option value="ca">Canada</option>
+            <option value="uk">United Kingdom</option>
+            <option value="au">Australia</option>
+            <option value="de">Germany</option>
+            <option value="fr">France</option>
+            <option value="jp">Japan</option>
+            <option value="br">Brazil</option>
+          </select>
+        </div>
+
+        <!-- Phone Number -->
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+            Phone Number * <span class="text-gray-500 text-xs">(Format: 123-456-7890)</span>
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            required
+            pattern="\d{3}-\d{3}-\d{4}"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="123-456-7890"
+          >
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end pt-4">
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+          >
+            Next Page →
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Instructions -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <h3 class="font-semibold text-blue-900 mb-2">Instructions for Agents:</h3>
+      <ul class="text-sm text-blue-800 space-y-1">
+        <li>• Fill in all required fields marked with *</li>
+        <li>• Date of Birth must be in YYYY-MM-DD format</li>
+        <li>• Phone must be in XXX-XXX-XXXX format</li>
+        <li>• Click "Next Page" to proceed to the next challenge</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    document.getElementById('page1Form').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Validate all required fields
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const dob = document.getElementById('dob').value.trim();
+      const country = document.getElementById('country').value;
+      const phone = document.getElementById('phone').value.trim();
+
+      if (!firstName || !lastName || !email || !dob || !country || !phone) {
+        showError('Please fill in all required fields');
+        return;
+      }
+
+      // Validate email format
+      if (!validateEmail(email)) {
+        showError('Please enter a valid email address');
+        return;
+      }
+
+      // Validate date format
+      if (!validateDateOfBirth(dob)) {
+        showError('Date of Birth must be in YYYY-MM-DD format');
+        return;
+      }
+
+      // Validate phone format
+      if (!validatePhone(phone)) {
+        showError('Phone must be in XXX-XXX-XXXX format');
+        return;
+      }
+
+      // Store data in sessionStorage
+      sessionStorage.setItem('page1Data', JSON.stringify({
+        firstName, lastName, email, dob, country, phone
+      }));
+
+      // Navigate to next page
+      window.location.href = 'page2.html';
+    });
+  </script>
+</body>
+</html>

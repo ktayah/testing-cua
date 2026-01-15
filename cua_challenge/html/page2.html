@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CUA Challenge - Page 2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">CUA Challenge</h1>
+      <p class="text-gray-600">Test your Computer Use Agent's capabilities</p>
+      <div class="mt-4 flex items-center">
+        <div class="flex-1 bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-600 h-2 rounded-full" style="width: 50%"></div>
+        </div>
+        <span class="ml-4 text-sm font-semibold text-gray-700">Page 2 of 4</span>
+      </div>
+    </div>
+
+    <!-- Main Form -->
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Page 2: Additional Details</h2>
+        <p class="text-gray-600">Difficulty: <span class="text-yellow-600 font-semibold">Medium</span></p>
+      </div>
+
+      <!-- Error Message -->
+      <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      </div>
+
+      <form id="page2Form" class="space-y-6">
+        <!-- Address -->
+        <div>
+          <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+            Street Address *
+          </label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="123 Main Street"
+          >
+        </div>
+
+        <!-- City and Zip Code Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
+              City *
+            </label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              required
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="New York"
+            >
+          </div>
+          <div>
+            <label for="zipCode" class="block text-sm font-medium text-gray-700 mb-2">
+              Zip Code * <span class="text-gray-500 text-xs">(5 digits)</span>
+            </label>
+            <input
+              type="text"
+              id="zipCode"
+              name="zipCode"
+              required
+              pattern="\d{5}"
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="12345"
+            >
+          </div>
+        </div>
+
+        <!-- Employment Status -->
+        <div>
+          <label for="employment" class="block text-sm font-medium text-gray-700 mb-2">
+            Employment Status *
+          </label>
+          <select
+            id="employment"
+            name="employment"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">Select employment status</option>
+            <option value="full-time">Full-time Employed</option>
+            <option value="part-time">Part-time Employed</option>
+            <option value="self-employed">Self-employed</option>
+            <option value="unemployed">Unemployed</option>
+            <option value="student">Student</option>
+            <option value="retired">Retired</option>
+          </select>
+        </div>
+
+        <!-- Skills Multi-select -->
+        <div>
+          <label for="skills" class="block text-sm font-medium text-gray-700 mb-2">
+            Skills * <span class="text-gray-500 text-xs">(Select at least 2)</span>
+          </label>
+          <select
+            id="skills"
+            name="skills"
+            multiple
+            required
+            size="6"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="csharp">C#</option>
+            <option value="ruby">Ruby</option>
+            <option value="go">Go</option>
+            <option value="rust">Rust</option>
+            <option value="typescript">TypeScript</option>
+          </select>
+          <p class="mt-1 text-xs text-gray-500">Hold Ctrl (Windows/Linux) or Cmd (Mac) to select multiple</p>
+        </div>
+
+        <!-- Years of Experience -->
+        <div>
+          <label for="experience" class="block text-sm font-medium text-gray-700 mb-2">
+            Years of Experience *
+          </label>
+          <select
+            id="experience"
+            name="experience"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">Select years</option>
+            <option value="0-1">0-1 years</option>
+            <option value="1-3">1-3 years</option>
+            <option value="3-5">3-5 years</option>
+            <option value="5-10">5-10 years</option>
+            <option value="10+">10+ years</option>
+          </select>
+        </div>
+
+        <!-- Preferred Contact Method (Radio) -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Preferred Contact Method *
+          </label>
+          <div class="space-y-2">
+            <label class="flex items-center">
+              <input type="radio" name="contactMethod" value="email" required class="mr-2">
+              <span>Email</span>
+            </label>
+            <label class="flex items-center">
+              <input type="radio" name="contactMethod" value="phone" required class="mr-2">
+              <span>Phone</span>
+            </label>
+            <label class="flex items-center">
+              <input type="radio" name="contactMethod" value="text" required class="mr-2">
+              <span>Text Message</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between pt-4">
+          <button
+            type="button"
+            onclick="window.location.href='index.html'"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+          >
+            ← Back
+          </button>
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+          >
+            Next Page →
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Instructions -->
+    <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <h3 class="font-semibold text-yellow-900 mb-2">Instructions for Agents:</h3>
+      <ul class="text-sm text-yellow-800 space-y-1">
+        <li>• Fill in all required fields</li>
+        <li>• Zip Code must be exactly 5 digits</li>
+        <li>• Select at least 2 skills from the multi-select box</li>
+        <li>• Choose one radio button for contact method</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Random Popup Modal -->
+  <div id="randomModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-md mx-4">
+      <div class="flex items-center mb-4">
+        <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h3 class="text-xl font-bold text-gray-800">Important Notice</h3>
+      </div>
+      <p class="text-gray-600 mb-6">
+        Please ensure all information is accurate before proceeding. This is a test modal that appears randomly.
+      </p>
+      <button
+        onclick="closeModal('randomModal')"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-md transition-colors duration-200"
+      >
+        I Understand
+      </button>
+    </div>
+  </div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    document.getElementById('page2Form').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Validate all required fields
+      const address = document.getElementById('address').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const zipCode = document.getElementById('zipCode').value.trim();
+      const employment = document.getElementById('employment').value;
+      const skills = Array.from(document.getElementById('skills').selectedOptions).map(opt => opt.value);
+      const experience = document.getElementById('experience').value;
+      const contactMethod = document.querySelector('input[name="contactMethod"]:checked');
+
+      if (!address || !city || !zipCode || !employment || !experience || !contactMethod) {
+        showError('Please fill in all required fields');
+        return;
+      }
+
+      // Validate zip code
+      if (!validateZipCode(zipCode)) {
+        showError('Zip Code must be exactly 5 digits');
+        return;
+      }
+
+      // Validate skills selection
+      if (skills.length < 2) {
+        showError('Please select at least 2 skills');
+        return;
+      }
+
+      // Store data in sessionStorage
+      sessionStorage.setItem('page2Data', JSON.stringify({
+        address, city, zipCode, employment, skills, experience, contactMethod: contactMethod.value
+      }));
+
+      // Navigate to next page
+      window.location.href = 'page3.html';
+    });
+  </script>
+</body>
+</html>

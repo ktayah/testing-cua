@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CUA Challenge - Success!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Success Header -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-6 text-center">
+      <div class="flex justify-center mb-4">
+        <svg class="w-20 h-20 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">Challenge Completed!</h1>
+      <p class="text-xl text-gray-600">Congratulations on successfully completing the CUA Challenge</p>
+      <div class="mt-6 flex items-center justify-center">
+        <div class="flex-1 max-w-md bg-gray-200 rounded-full h-3">
+          <div class="bg-green-600 h-3 rounded-full" style="width: 100%"></div>
+        </div>
+      </div>
+      <p class="mt-2 text-sm font-semibold text-gray-700">4 of 4 Pages Completed</p>
+    </div>
+
+    <!-- Summary of Submitted Data -->
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Submission Summary</h2>
+
+      <!-- Page 1 Data -->
+      <div class="mb-6 pb-6 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-700 mb-3">Page 1: Basic Information</h3>
+        <div id="page1Summary" class="grid grid-cols-2 gap-3 text-sm">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Page 2 Data -->
+      <div class="mb-6 pb-6 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-700 mb-3">Page 2: Additional Details</h3>
+        <div id="page2Summary" class="grid grid-cols-2 gap-3 text-sm">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Page 3 Data -->
+      <div class="mb-6 pb-6 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-700 mb-3">Page 3: Advanced Selection</h3>
+        <div id="page3Summary" class="grid grid-cols-2 gap-3 text-sm">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Page 4 Data -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-700 mb-3">Page 4: Final Challenge</h3>
+        <div id="page4Summary" class="grid grid-cols-2 gap-3 text-sm">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-center gap-4 pt-6 border-t border-gray-200">
+        <button
+          onclick="window.location.href='index.html'"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+        >
+          Start New Challenge
+        </button>
+        <button
+          onclick="clearData()"
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-8 py-3 rounded-md transition-colors duration-200"
+        >
+          Clear All Data
+        </button>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-gradient-to-br from-green-400 to-green-600 rounded-lg shadow-md p-6 text-white">
+        <div class="text-3xl font-bold mb-2">4/4</div>
+        <div class="text-sm opacity-90">Pages Completed</div>
+      </div>
+      <div class="bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg shadow-md p-6 text-white">
+        <div class="text-3xl font-bold mb-2">100%</div>
+        <div class="text-sm opacity-90">Success Rate</div>
+      </div>
+      <div class="bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg shadow-md p-6 text-white">
+        <div class="text-3xl font-bold mb-2" id="fieldCount">0</div>
+        <div class="text-sm opacity-90">Fields Filled</div>
+      </div>
+    </div>
+
+    <!-- Agent Performance Notes -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <h3 class="font-semibold text-blue-900 mb-3">Challenge Features Tested:</h3>
+      <ul class="text-sm text-blue-800 space-y-2">
+        <li>✓ Basic text input fields</li>
+        <li>✓ Dropdown select menus</li>
+        <li>✓ Multi-select inputs</li>
+        <li>✓ Searchable dropdown with filtering</li>
+        <li>✓ Radio button groups</li>
+        <li>✓ Checkbox inputs</li>
+        <li>✓ Format-specific inputs (dates, phone numbers, zip codes)</li>
+        <li>✓ Collapsible sections with hidden fields</li>
+        <li>✓ Table search with row selection</li>
+        <li>✓ Random popup modals</li>
+        <li>✓ Dependent/conditional fields</li>
+        <li>✓ Multi-page navigation with validation</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function displaySummary() {
+      // Get all stored data
+      const page1Data = JSON.parse(sessionStorage.getItem('page1Data') || '{}');
+      const page2Data = JSON.parse(sessionStorage.getItem('page2Data') || '{}');
+      const page3Data = JSON.parse(sessionStorage.getItem('page3Data') || '{}');
+      const page4Data = JSON.parse(sessionStorage.getItem('page4Data') || '{}');
+
+      let totalFields = 0;
+
+      // Display Page 1 Data
+      const page1Summary = document.getElementById('page1Summary');
+      if (Object.keys(page1Data).length > 0) {
+        page1Summary.innerHTML = Object.entries(page1Data).map(([key, value]) => {
+          totalFields++;
+          return `
+            <div>
+              <span class="font-medium text-gray-700">${formatKey(key)}:</span>
+              <span class="text-gray-600">${value}</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        page1Summary.innerHTML = '<p class="text-gray-500">No data submitted</p>';
+      }
+
+      // Display Page 2 Data
+      const page2Summary = document.getElementById('page2Summary');
+      if (Object.keys(page2Data).length > 0) {
+        page2Summary.innerHTML = Object.entries(page2Data).map(([key, value]) => {
+          totalFields++;
+          const displayValue = Array.isArray(value) ? value.join(', ') : value;
+          return `
+            <div>
+              <span class="font-medium text-gray-700">${formatKey(key)}:</span>
+              <span class="text-gray-600">${displayValue}</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        page2Summary.innerHTML = '<p class="text-gray-500">No data submitted</p>';
+      }
+
+      // Display Page 3 Data
+      const page3Summary = document.getElementById('page3Summary');
+      if (Object.keys(page3Data).length > 0) {
+        page3Summary.innerHTML = Object.entries(page3Data).map(([key, value]) => {
+          totalFields++;
+          return `
+            <div>
+              <span class="font-medium text-gray-700">${formatKey(key)}:</span>
+              <span class="text-gray-600">${value}</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        page3Summary.innerHTML = '<p class="text-gray-500">No data submitted</p>';
+      }
+
+      // Display Page 4 Data
+      const page4Summary = document.getElementById('page4Summary');
+      if (Object.keys(page4Data).length > 0) {
+        page4Summary.innerHTML = Object.entries(page4Data).map(([key, value]) => {
+          totalFields++;
+          const displayValue = Array.isArray(value) ? value.join(', ') : value;
+          return `
+            <div>
+              <span class="font-medium text-gray-700">${formatKey(key)}:</span>
+              <span class="text-gray-600">${displayValue}</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        page4Summary.innerHTML = '<p class="text-gray-500">No data submitted</p>';
+      }
+
+      // Update field count
+      document.getElementById('fieldCount').textContent = totalFields;
+    }
+
+    function formatKey(key) {
+      // Convert camelCase to Title Case
+      return key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, str => str.toUpperCase());
+    }
+
+    function clearData() {
+      if (confirm('Are you sure you want to clear all submission data?')) {
+        sessionStorage.clear();
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Display summary on page load
+    displaySummary();
+  </script>
+</body>
+</html>

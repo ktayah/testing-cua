@@ -1,0 +1,66 @@
+{
+  "test_id": "scenario_003",
+  "description": "Data scientist profile with maximum format variations",
+  "page1": {
+    "first_name": "Aisha",
+    "last_name": "Okonkwo",
+    "email": "a.okonkwo@datasolutions.ai",
+    "date_of_birth": "15/07/1990",
+    "country": "United Kingdom",
+    "phone_number": "202 555 7890"
+  },
+  "page2": {
+    "street_address": "3847 Pine Avenue",
+    "city": "Seattle",
+    "zip_code": "98122",
+    "employment_status": "Part-time Employed",
+    "skills": [
+      "Python",
+      "Rust"
+    ],
+    "years_of_experience": "5-10",
+    "preferred_contact_method": "text"
+  },
+  "page3": {
+    "company": {
+      "hint": "Search for Apple"
+    },
+    "emergency_contact": {
+      "name": "James Okonkwo",
+      "phone": "202-555-4433",
+      "relationship": "Parent"
+    },
+    "product": {
+      "search_hint": "Find mechanical keyboard",
+      "product_name_partial": "Mechanical",
+      "notes": "Should be in accessories category around $149"
+    }
+  },
+  "page4": {
+    "project_type": "Data Science",
+    "framework": {
+      "hint": "Select TensorFlow for machine learning"
+    },
+    "features": [
+      "Analytics",
+      "Database Integration",
+      "API"
+    ],
+    "budget": 200000,
+    "team": {
+      "size": "1-5 members",
+      "project_manager": "Dr. Rachel Kim"
+    },
+    "vendor": {
+      "search_hint": "Find data science vendor in Seattle with excellent rating",
+      "keyword": "Data",
+      "rating_min": "4.7"
+    },
+    "timeline": {
+      "start_date": "2024-05-01",
+      "end_date": "2024-11-30",
+      "format_note": "Already in YYYY-MM-DD format"
+    },
+    "agreement": true
+  }
+}

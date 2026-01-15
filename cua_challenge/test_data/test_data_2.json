@@ -1,0 +1,68 @@
+{
+  "test_id": "scenario_002",
+  "description": "Mobile app developer with varied format challenges",
+  "page1": {
+    "first_name": "Marcus",
+    "last_name": "Rodriguez",
+    "email": "m.rodriguez@innovateapps.io",
+    "date_of_birth": "1988-11-22",
+    "country": "Canada",
+    "phone_number": "1-604-555-3421"
+  },
+  "page2": {
+    "street_address": "1250 Burrard Street, Unit 2103",
+    "city": "Vancouver",
+    "zip_code": "98101",
+    "employment_status": "Self-employed",
+    "skills": [
+      "Java",
+      "Go",
+      "Ruby",
+      "Python"
+    ],
+    "years_of_experience": "10+",
+    "preferred_contact_method": "phone"
+  },
+  "page3": {
+    "company": {
+      "hint": "Find Meta Platforms"
+    },
+    "emergency_contact": {
+      "name": "Elena Rodriguez",
+      "phone": "+1 604 555 8899",
+      "relationship": "Spouse"
+    },
+    "product": {
+      "search_hint": "Search for USB hub in accessories",
+      "name_contains": "USB",
+      "price_range": "$50-$100"
+    }
+  },
+  "page4": {
+    "project_type": "Mobile Development",
+    "framework": {
+      "hint": "Choose Flutter for cross-platform"
+    },
+    "features": [
+      "Push Notifications",
+      "Analytics",
+      "Search Functionality",
+      "User Authentication"
+    ],
+    "budget": 125000,
+    "team": {
+      "size": "11-20 members",
+      "project_manager": "David Park"
+    },
+    "vendor": {
+      "search_hint": "Find vendor specializing in Mobile Apps in New York",
+      "specialization": "Mobile Apps",
+      "location_contains": "New York"
+    },
+    "timeline": {
+      "start_date": "2024-03-15T00:00:00.000Z",
+      "end_date": "2025-01-15T23:59:59.999Z"
+    },
+    "agreement": true
+  }
+}

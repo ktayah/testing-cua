@@ -1,0 +1,59 @@
+# Docker Compose configuration for CUA Computer Use
+# Provides an easy way to run a persistent browser container and challenge website
+
+services:
+  cua-browser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cua_computer_use
+    container_name: cua_browser_main
+    ports:
+      - "9222:9222"  # Chrome DevTools Protocol
+      - "5900:5900"  # VNC for visual debugging
+    environment:
+      - DISPLAY=:99
+      - SCREEN_WIDTH=1024
+      - SCREEN_HEIGHT=768
+      - SCREEN_DEPTH=24
+    # Uncomment to keep container running between sessions
+    # restart: unless-stopped
+    # Uncomment for persistent data
+    # volumes:
+    #   - ./browser-data:/home/computeruse/.config/google-chrome
+    networks:
+      - cua-network
+    # Resource limits (adjust as needed)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  cua-challenge:
+    build:
+      context: ./cua_challenge
+      dockerfile: Dockerfile
+    image: cua-challenge
+    container_name: cua_challenge_web
+    ports:
+      - "8080:80"  # Web interface for challenge
+    networks:
+      - cua-network
+    # Uncomment to keep container running between sessions
+    # restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+networks:
+  cua-network:
+    driver: bridge
