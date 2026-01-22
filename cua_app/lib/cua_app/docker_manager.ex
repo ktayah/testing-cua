@@ -1,11 +1,13 @@
 defmodule CuaApp.DockerManager do
   @moduledoc """
   Manages local Docker-based browser sessions for computer use.
-  Alternative to Browserbase for local development and testing.
+  Expects containers to be started via docker-compose.
+  Only validates that the browser container is running and accessible.
   """
 
   require Logger
 
+  @expected_container_name "cua_browser"
   @container_name_prefix "cua_browser_"
   @image_name "cua_computer_use"
   @cdp_port 9222
@@ -14,13 +16,13 @@ defmodule CuaApp.DockerManager do
   @check_interval 2_000
 
   @doc """
-  Creates a new Docker container with Firefox ESR and remote debugging enabled.
+  Connects to an existing Docker container started by docker-compose.
+  Expects the container 'cua_browser_main' to already be running.
 
   ## Options
-  - container_name: Custom container name (optional, defaults to generated name)
-  - cdp_port: CDP port to expose (default: 9222)
-  - vnc_port: VNC port to expose (default: 5900)
-  - remove_on_exit: Auto-remove container when stopped (default: true)
+  - container_name: Container name to check (default: "cua_browser_main")
+  - cdp_port: Expected CDP port (default: 9222)
+  - vnc_port: Expected VNC port (default: 5900)
 
   ## Returns
   {:ok, session_info} or {:error, reason}
@@ -30,40 +32,67 @@ defmodule CuaApp.DockerManager do
   - container_name: The container name
   - cdp_url: The remote debugging port URL (ws://localhost:9222)
   - vnc_url: The VNC URL for visual debugging (vnc://localhost:5900)
+
+  ## Usage
+  Before calling this function, ensure docker-compose is running:
+  ```bash
+  docker-compose up -d
+  ```
+
+  Then in your Elixir code:
+  ```elixir
+  case CuaApp.DockerManager.create_session() do
+    {:ok, session_info} -> # Use session_info
+    {:error, reason} -> # Container not running - start docker-compose
+  end
+  ```
   """
   def create_session(opts \\ []) do
-    container_name = Keyword.get(opts, :container_name, generate_container_name())
+    container_name = Keyword.get(opts, :container_name, @expected_container_name)
     cdp_port = Keyword.get(opts, :cdp_port, @cdp_port)
     vnc_port = Keyword.get(opts, :vnc_port, @vnc_port)
-    remove_on_exit = Keyword.get(opts, :remove_on_exit, true)
 
-    Logger.info("Creating Docker container: #{container_name}")
+    Logger.info("Checking for existing container: #{container_name}")
 
-    # Ensure image is built
-    with :ok <- ensure_image_built(),
-         {:ok, container_id} <-
-           start_container(container_name, cdp_port, vnc_port, remove_on_exit) do
-      # Use Mac Screen sharing app, won't work on non Macs
-      System.cmd("open", ["vnc://localhost:5900"])
+    # Use Mac Screen sharing app, won't work on non Macs
+    System.cmd("open", ["vnc://localhost:5900"])
 
-      case wait_for_chrome(container_id) do
-        :ok ->
-          session_info = %{
-            container_id: container_id,
-            container_name: container_name,
-            cdp_url: "ws://localhost:#{cdp_port}",
-            vnc_url: "vnc://localhost:#{vnc_port}",
-            cdp_port: cdp_port,
-            vnc_port: vnc_port
-          }
+    with {:ok, container_id} <- check_container_exists(container_name),
+         {:ok, is_running} <- check_container_running(container_id),
+         :ok <- validate_container_running(is_running, container_name),
+         :ok <- wait_for_browser_ready(container_id) do
+      session_info = %{
+        container_id: container_id,
+        container_name: container_name,
+        cdp_url: "ws://localhost:#{cdp_port}",
+        vnc_url: "vnc://localhost:#{vnc_port}",
+        cdp_port: cdp_port,
+        vnc_port: vnc_port
+      }
 
-          Logger.info("Container ready: #{container_id}")
-          {:ok, session_info}
+      Logger.info("Container ready: #{container_id} (#{container_name})")
+      {:ok, session_info}
+    else
+      {:error, :container_not_found} ->
+        {:error,
+         """
+         Container '#{container_name}' not found.
+         Please start it with docker-compose:
+           docker-compose up -d
+         """}
 
-        {:error, reason} ->
-          stop_container(container_id)
-          {:error, "Browser failed to start: #{reason}"}
-      end
+      {:error, :container_not_running} ->
+        {:error,
+         """
+         Container '#{container_name}' exists but is not running.
+         Start it with:
+           docker-compose up -d
+         Or check its status:
+           docker-compose ps
+         """}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -189,115 +218,67 @@ defmodule CuaApp.DockerManager do
 
   ## Private Functions
 
-  defp ensure_image_built do
-    Logger.info("Checking Docker image: #{@image_name}")
+  defp check_container_exists(container_name) do
+    Logger.debug("Checking if container exists: #{container_name}")
 
-    case System.cmd("docker", ["images", "-q", @image_name], stderr_to_stdout: true) do
-      {"", 0} ->
-        Logger.info("Image not found, building...")
-        build_image()
-
-      {_output, 0} ->
-        Logger.info("Image already exists: #{@image_name}")
-        :ok
-
-      {output, _} ->
-        Logger.error("Failed to check image: #{output}")
-        {:error, output}
-    end
-  end
-
-  defp build_image do
-    # Use current working directory (where mix.exs is)
-    dockerfile_path = File.cwd!()
-
-    Logger.info("Building Docker image from: #{dockerfile_path}")
-
-    # Stream output to stdio for real-time feedback, don't try to capture it
-    case System.cmd("docker", ["build", "-t", @image_name, dockerfile_path],
-           stderr_to_stdout: true,
-           into: IO.stream(:stdio, :line)
+    case System.cmd("docker", ["inspect", "-f", "{{.Id}}", container_name],
+           stderr_to_stdout: true
          ) do
-      {_stream, 0} ->
-        Logger.info("Image built successfully: #{@image_name}")
-        :ok
-
-      {_stream, exit_code} ->
-        error_msg = "Docker build failed with exit code #{exit_code}"
-        Logger.error(error_msg)
-        {:error, error_msg}
-    end
-  end
-
-  defp start_container(name, cdp_port, vnc_port, remove_on_exit) do
-    args = [
-      "run",
-      "-d",
-      "--name",
-      name,
-      "-p",
-      "#{cdp_port}:9222",
-      "-p",
-      "#{vnc_port}:5900"
-    ]
-
-    args = if remove_on_exit, do: args ++ ["--rm"], else: args
-
-    args = args ++ [@image_name]
-
-    Logger.info("Starting container with args: #{inspect(args)}")
-
-    case System.cmd("docker", args, stderr_to_stdout: true) do
       {container_id, 0} ->
         {:ok, String.trim(container_id)}
 
-      {output, _} ->
-        {:error, output}
+      {_output, _} ->
+        Logger.warning("Container '#{container_name}' not found")
+        {:error, :container_not_found}
     end
   end
 
-  defp wait_for_chrome(container_id) do
-    Logger.info("Waiting for browser to start (max wait: #{@max_wait_time / 1000}s)...")
-    wait_for_chrome(container_id, @max_wait_time, 0)
+  defp check_container_running(container_id) do
+    case System.cmd("docker", ["inspect", "-f", "{{.State.Running}}", container_id],
+           stderr_to_stdout: true
+         ) do
+      {"true\n", 0} ->
+        {:ok, true}
+
+      {"false\n", 0} ->
+        {:ok, false}
+
+      {output, _} ->
+        {:error, "Failed to check container status: #{output}"}
+    end
   end
 
-  defp wait_for_chrome(container_id, max_wait, elapsed) when elapsed >= max_wait do
+  defp validate_container_running(true, _container_name), do: :ok
+
+  defp validate_container_running(false, container_name) do
+    Logger.warning("Container '#{container_name}' exists but is not running")
+    {:error, :container_not_running}
+  end
+
+  defp wait_for_browser_ready(container_id) do
+    Logger.info("Waiting for browser to be ready (max wait: #{@max_wait_time / 1000}s)...")
+    wait_for_browser_ready(container_id, @max_wait_time, 0)
+  end
+
+  defp wait_for_browser_ready(container_id, max_wait, elapsed) when elapsed >= max_wait do
     Logger.error("Timeout after #{elapsed / 1000}s waiting for browser")
+
     # Get container logs for debugging
     case System.cmd("docker", ["logs", "--tail", "50", container_id], stderr_to_stdout: true) do
       {logs, _} -> Logger.error("Container logs:\n#{logs}")
       _ -> :ok
     end
 
-    {:error, "Timeout waiting for browser to start"}
+    {:error, "Timeout waiting for browser to be ready"}
   end
 
-  defp wait_for_chrome(container_id, max_wait, elapsed) do
+  defp wait_for_browser_ready(container_id, max_wait, elapsed) do
     # Log progress every 10 seconds
     if rem(elapsed, 10_000) == 0 and elapsed > 0 do
       Logger.info("Still waiting... (#{elapsed / 1000}s elapsed)")
     end
 
-    # Check if container is still running
-    case System.cmd("docker", ["inspect", "-f", "{{.State.Running}}", container_id], stderr_to_stdout: true) do
-      {"true\n", 0} ->
-        # Container is running, check CDP endpoint
-        check_cdp_endpoint(container_id, max_wait, elapsed)
-
-      _ ->
-        Logger.error("Container stopped unexpectedly")
-        # Try to get logs before container is removed
-        case System.cmd("docker", ["logs", "--tail", "100", container_id], stderr_to_stdout: true) do
-          {logs, 0} -> Logger.error("Container logs:\n#{logs}")
-          {logs, _} -> Logger.error("Container logs (may be incomplete):\n#{logs}")
-        end
-
-        {:error, "Container is not running"}
-    end
-  end
-
-  defp check_cdp_endpoint(container_id, max_wait, elapsed) do
-    # Check if Firefox/browser process is running (Firefox doesn't use Chrome's CDP endpoints)
+    # Check if browser process is running
     case System.cmd(
            "docker",
            [
@@ -305,7 +286,7 @@ defmodule CuaApp.DockerManager do
              container_id,
              "sh",
              "-c",
-             "ps aux | grep -E '(firefox|chromium)' | grep -v grep"
+             "ps aux | grep -E '(firefox|chromium|chrome)' | grep -v grep"
            ],
            stderr_to_stdout: true
          ) do
@@ -319,13 +300,7 @@ defmodule CuaApp.DockerManager do
         # Browser not started yet
         Logger.debug("Browser not ready yet, waiting...")
         Process.sleep(@check_interval)
-        wait_for_chrome(container_id, max_wait, elapsed + @check_interval)
+        wait_for_browser_ready(container_id, max_wait, elapsed + @check_interval)
     end
-  end
-
-  defp generate_container_name do
-    timestamp = System.system_time(:second)
-    random = :rand.uniform(10000)
-    "#{@container_name_prefix}#{timestamp}_#{random}"
   end
 end

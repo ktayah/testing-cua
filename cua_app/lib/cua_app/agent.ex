@@ -21,22 +21,25 @@ defmodule CuaApp.Agent do
     :container_id
   ]
 
-  @default_max_iterations 50
+  @default_max_iterations 250
 
   @system_message """
   <SYSTEM_CAPABILITY>
-    * You are utilizing an Ubuntu virtual machine with an X11 display with internet access.
-    * You can feel free to install Ubuntu applications with your bash tool. Use curl instead of wget.
-    * Using bash tool you can start GUI applications, but you need to set export DISPLAY=:1 and use a subshell. For example "(DISPLAY=:1 xterm &)". GUI apps run with bash tool will appear within your desktop environment, but they may take some time to appear. Take a screenshot to confirm it did.
-    * When using your bash tool with commands that are expected to output very large quantities of text, redirect into a tmp file and use str_replace_based_edit_tool or `grep -n -B <lines before> -A <lines after> <query> <filename>` to confirm output.
-    * When viewing a page it can be helpful to zoom out so that you can see everything on the page.  Either that, or make sure you scroll down to see everything before deciding something isn't available.
-    * When using your computer function calls, they take a while to run and send back to you.  Where possible/feasible, try to chain multiple of these calls all into one function calls request.
+  * You are utilizing an Ubuntu virtual machine with an X11 display with internet access.
+  * You can feel free to install Ubuntu applications with your bash tool. Use curl instead of wget.
+  * Using bash tool you can start GUI applications, but you need to set export DISPLAY=:1 and use a subshell. For example "(DISPLAY=:1 xterm &)". GUI apps run with bash tool will appear within your desktop environment, but they may take some time to appear. Take a screenshot to confirm it did.
+  * When using your bash tool with commands that are expected to output very large quantities of text, redirect into a tmp file and use str_replace_based_edit_tool or `grep -n -B <lines before> -A <lines after> <query> <filename>` to confirm output.
+  * When viewing a page it can be helpful to zoom out so that you can see everything on the page.  Either that, or make sure you scroll down to see everything before deciding something isn't available.
+  * When using your computer function calls, they take a while to run and send back to you.  Where possible/feasible, try to chain multiple of these calls all into one function calls request.
   </SYSTEM_CAPABILITY>
   <IMPORTANT>
-    * When using Firefox, if a startup wizard appears, IGNORE IT.  Do not even click "skip this step".  Instead, click on the address bar where it says "Search or enter address", and enter the appropriate search term or URL there.
-    * If the item you are looking at is a pdf, if after taking a single screenshot of the pdf it seems that you want to read the entire document instead of trying to continue to read the pdf from your screenshots + navigation, determine the URL, use curl to download the pdf, install and use pdftotext to convert it to a text file, and then read that text file directly with your str_replace_based_edit_tool.
+  * When using Firefox, if a startup wizard appears, IGNORE IT.  Do not even click "skip this step".  Instead, click on the address bar where it says "Search or enter address", and enter the appropriate search term or URL there.
+  * If the item you are looking at is a pdf, if after taking a single screenshot of the pdf it seems that you want to read the entire document instead of trying to continue to read the pdf from your screenshots + navigation, determine the URL, use curl to download the pdf, install and use pdftotext to convert it to a text file, and then read that text file directly with your str_replace_based_edit_tool.
+  * Attempt to utilize keyboard shortcuts as much as possible to avoid unnecessary message passing, for example using tab to move to the next input field or CTRL + L to select the search bar.
   </IMPORTANT>
   """
+
+  # * Minimize screenshots needed between filling out fields, take a screenshot on load to understand the layout and plan for any necessary actions, complete the actions, and then take a screenshot to confirm. Repeat this process as needed.
 
   @doc """
   Starts the agent with a given task.
@@ -131,14 +134,10 @@ defmodule CuaApp.Agent do
 
           result = run_agentic_loop(state)
 
-          # Cleanup session
-          cleanup_session(state)
-
           {:reply, result, %{state | status: :idle}}
         catch
           error ->
             Logger.error(inspect(error))
-            cleanup_session(state)
 
             {:reply, {:error, "Task execution failed: #{inspect(error)}"},
              %{state | status: :idle}}
@@ -151,13 +150,6 @@ defmodule CuaApp.Agent do
   end
 
   ## Private Functions
-
-  defp cleanup_session(%{container_id: container_id}) when not is_nil(container_id) do
-    Logger.info("Cleaning up Docker container: #{container_id}")
-    DockerManager.stop_container(container_id)
-  end
-
-  defp cleanup_session(_state), do: :ok
 
   defp run_agentic_loop(state) do
     initial_message = %{role: "user", content: state.task}
