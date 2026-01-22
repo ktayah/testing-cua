@@ -7,34 +7,21 @@ ENV DISPLAY=:99
 ENV SCREEN_WIDTH=1280
 ENV SCREEN_HEIGHT=800
 ENV SCREEN_DEPTH=24
+# Disable Firefox sandboxing in containerENV MOZ_DISABLE_CONTENT_SANDBOX=1
+ENV MOZ_DISABLE_GMP_SANDBOX=1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    # Desktop environment
     xfce4 \
     xfce4-goodies \
-    xvfb \
     x11vnc \
-    # Browser automation tools
+    xvfb \
     xdotool \
-    wmctrl \
-    # Utilities
-    curl \
-    wget \
-    gnupg \
-    unzip \
     imagemagick \
     x11-apps \
     sudo \
     software-properties-common \
-    ca-certificates \
-    openssl \
-    locales \
-    libstdc++6 \
-    libncurses5 \
-    file \
-    # Remove screen lockers and power managers that might interfere
-    && apt-get remove -y light-locker xfce4-screensaver xfce4-power-manager xfce4-session || true \
+    && apt-get remove -y light-locker xfce4-screensaver xfce4-power-manager || true \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Firefox ESR from Mozilla PPA
@@ -48,16 +35,18 @@ RUN add-apt-repository ppa:mozillateam/ppa \
 RUN useradd -ms /bin/bash computeruse \
     && echo "computeruse ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Set x11vnc password for debugging (as root, then chown)
-RUN mkdir -p /home/computeruse/.vnc \
-    && x11vnc -storepasswd secret /home/computeruse/.vnc/passwd \
-    && chown -R computeruse:computeruse /home/computeruse/.vnc
-
 USER computeruse
 WORKDIR /home/computeruse
 
-# Copy startup script from host                                                                                                                                                                
-COPY --chown=computeruse:computeruse ./start.sh /home/computeruse/start.sh                                                                                                                      
+# Set x11vnc password
+RUN x11vnc -storepasswd secret /home/computeruse/.vncpass
+
+# Pre-create Firefox profile directories to avoid runtime errors
+RUN mkdir -p /home/computeruse/.mozilla/firefox-esr \
+    && mkdir -p /home/computeruse/.cache/mozilla/firefox
+
+# Copy startup script from host
+COPY --chown=computeruse:computeruse ./start.sh /home/computeruse/start.sh
 RUN chmod +x /home/computeruse/start.sh
 
 # Expose ports
