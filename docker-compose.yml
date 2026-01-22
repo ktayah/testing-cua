@@ -4,20 +4,20 @@
 services:
   cua-browser:
     build:
-      context: .
+      context: ./cua_app/lib/cua_app/agent/docker
       dockerfile: Dockerfile
     image: cua_computer_use
-    container_name: cua_browser_main
+    container_name: cua_browser
     ports:
-      - "9222:9222"  # Chrome DevTools Protocol
-      - "5900:5900"  # VNC for visual debugging
+      - "9222:9222" # Chrome DevTools Protocol
+      - "5900:5900" # VNC for visual debugging
     environment:
       - DISPLAY=:99
       - SCREEN_WIDTH=1024
       - SCREEN_HEIGHT=768
       - SCREEN_DEPTH=24
     # Uncomment to keep container running between sessions
-    # restart: unless-stopped
+    restart: unless-stopped
     # Uncomment for persistent data
     # volumes:
     #   - ./browser-data:/home/computeruse/.config/google-chrome
@@ -27,10 +27,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
+          cpus: "2"
           memory: 4G
         reservations:
-          cpus: '1'
+          cpus: "1"
           memory: 2G
 
   cua-challenge:
@@ -40,18 +40,18 @@ services:
     image: cua-challenge
     container_name: cua_challenge_web
     ports:
-      - "8080:80"  # Web interface for challenge
+      - "8080:80" # Web interface for challenge
     networks:
       - cua-network
     # Uncomment to keep container running between sessions
-    # restart: unless-stopped
+    restart: unless-stopped
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 256M
         reservations:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 64M
 
 networks:
